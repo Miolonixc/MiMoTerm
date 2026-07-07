@@ -50,7 +50,7 @@ class FileShareHelper(private val context: Context) {
     }
 
     private fun getMimeType(filename: String): String {
-        val ext = filename.substringAfterLast('.', '').lowercase()
+        val ext = filename.substringAfterLast('.', "").lowercase()
         return when (ext) {
             "txt" -> "text/plain"
             "pdf" -> "application/pdf"

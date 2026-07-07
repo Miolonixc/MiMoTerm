@@ -14,7 +14,7 @@ data class FileItem(
     val lastModified: Long,
     val mimeType: String? = null
 ) {
-    val extension: String get() = name.substringAfterLast('.', '').lowercase()
+    val extension: String get() = name.substringAfterLast('.', "").lowercase()
     val isHidden: Boolean get() = name.startsWith('.')
 }
 

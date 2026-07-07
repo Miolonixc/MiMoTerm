@@ -5,8 +5,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
@@ -31,20 +33,15 @@ class MiMoRepository @Inject constructor(
             .url("$baseUrl/v1/chat/completions")
             .addHeader("Authorization", "Bearer $apiKey")
             .addHeader("Content-Type", "application/json")
-            .post(
-                okhttp3.RequestBody.create(
-                    okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                    gson.toJson(request)
-                )
-            )
+            .post(gson.toJson(request).toRequestBody("application/json; charset=utf-8".toMediaType()))
             .build()
 
         val response = client.newCall(httpRequest).execute()
         if (!response.isSuccessful) {
-            throw Exception("API error: ${response.code()}")
+            throw Exception("API error: ${response.code}")
         }
 
-        val reader = BufferedReader(InputStreamReader(response.body()!!.byteStream()))
+        val reader = BufferedReader(InputStreamReader(response.body!!.byteStream()))
         var line: String?
         while (reader.readLine().also { line = it } != null) {
             val l = line ?: continue

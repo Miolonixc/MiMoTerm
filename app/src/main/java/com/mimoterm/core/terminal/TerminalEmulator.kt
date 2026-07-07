@@ -134,11 +134,11 @@ class TerminalEmulator(
         val b = data[i].toInt() and 0xFF
 
         when (b) {
-            '[' -> {
+            '['.code -> {
                 // CSI sequence
                 i = processCsiSequence(data, i + 1, length)
             }
-            ']' -> {
+            ']'.code -> {
                 // OSC sequence - skip until BEL or ST
                 while (i < length) {
                     if (data[i] == 0x07.toByte()) {
@@ -148,14 +148,14 @@ class TerminalEmulator(
                     i++
                 }
             }
-            '(' -> {
+            '('.code -> {
                 // Character set - skip next char
                 if (i + 1 < length) i += 2
             }
-            ')' -> {
+            ')'.code -> {
                 if (i + 1 < length) i += 2
             }
-            'M' -> {
+            'M'.code -> {
                 // Reverse index
                 if (cursorRow > 0) {
                     cursorRow--
@@ -163,26 +163,26 @@ class TerminalEmulator(
                     scrollDown()
                 }
             }
-            'D' -> {
+            'D'.code -> {
                 // Index (line feed)
                 lineFeed()
                 i++
             }
-            'E' -> {
+            'E'.code -> {
                 // Next line
                 cursorCol = 0
                 lineFeed()
                 i++
             }
-            '7' -> {
+            '7'.code -> {
                 // Save cursor - simplified
                 i++
             }
-            '8' -> {
+            '8'.code -> {
                 // Restore cursor - simplified
                 i++
             }
-            'c' -> {
+            'c'.code -> {
                 // Reset
                 reset()
                 i++
